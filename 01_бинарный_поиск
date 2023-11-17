@@ -1,0 +1,290 @@
+A Найди число в массиве
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+    vector <int> s(a);
+    for (int i = 0; i < a; i++) {
+        cin >> s[i];
+    }
+    sort(s.begin(), s.end());
+    int L, R, M;
+    vector <int> ss(a);
+    for (int i = 0; i < b; i++) {
+        cin >> ss[i];
+    }
+    for (int i = 0; i < b; i++) {
+        L = 0;
+        R = a - 1;
+        while (L + 1 < R) {
+            M = (L + R) / 2;
+            if (s[M] >= ss[i]) {
+                R = M;
+            } else {
+                L = M;
+            }
+        }
+        if (s[L] == ss[i] || s[R] == ss[i]) {
+            cout << "YES" << endl;
+        } else {
+            cout << "NO" << endl;
+        }
+    }
+    return 0;
+}
+
+
+
+B	Приближенный двоичный поиск
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    int a, b;
+    cin >> a >> b;
+    vector <long long> s(a);
+    for (int i = 0; i < a; i++) {
+        cin >> s[i];
+    }
+    int L, R, M;
+    vector <long long> ss(b);
+    for (int i = 0; i < b; i++) {
+        cin >> ss[i];
+    }
+    for (int i = 0; i < b; i++) {
+        L = 0;
+        R = a - 1;
+        while (L + 1 < R) {
+            M = (L + R) / 2;
+            if (s[M] >= ss[i]) {
+                R = M;
+            } else {
+                L = M;
+            }
+        }
+        if (ss[i] - s[L] <= s[R] - ss[i]) {
+            cout << s[L] << endl;
+        } else {
+            cout << s[R] << endl;
+        }
+    }
+    return 0;
+}
+
+
+
+D	Квадратный корень и квадратный квадрат
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    long double L, R, M, C;
+    long double x, y;
+    cin >> C;
+    L = 0;
+    x = 2;
+    y = 0.5;
+    R = C;
+    for (int _ = 0; _ < 100; _++) {
+        M = (L + R) / 2;
+        if (pow(M, x) + pow(M, y) <= C) {
+            L = M;
+        } else {
+            R = M;
+        }
+    }
+    cout << setprecision(11) << L;
+    return 0;
+}
+
+
+
+E	Корень кубического уравнения
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    long double L, R, M;
+    long double a, b, c, d;
+    cin >> a >> b >> c >> d;
+    L = -3.4 * pow(10, 38);
+    R = 3.4 * pow(10, 38);
+    if ((a * pow(L, 3) + b * pow(L, 2) + c * L + d) <= (a * pow(R, 3) + b * pow(R, 2) + c * R + d)) {
+        for (int _ = 0; _ < 1000; _++) {
+            M = (L + R) / 2;
+            if (a * M * M * M + b * M * M + c * M + d <= 0) {
+                L = M;
+            } else {
+                R = M;
+            }
+        }
+    } else {
+        for (int _ = 0; _ < 1000; _++) {
+            M = (L + R) / 2;
+            if (-(a * M * M * M + b * M * M + c * M + d) <= 0) {
+                L = M;
+            } else {
+                R = M;
+            }
+        }
+    }
+
+    cout << setprecision(11) << L;
+    return 0;
+}
+
+
+
+F	Очень Легкая Задача
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    long long n, x, y, L, M, R;
+    R = 0;
+    cin >> n >> x >> y;
+    // n = 7;
+    // x = 3;
+    // y = 5;
+    if (n > 1) {
+        L = 0;
+        R = min(n * x, n * y);
+        // R = n * x * y / (x + y) + 1;
+        while (L + 1 < R) {
+            M = (L + R) / 2;
+            if (M / x + M / y < n - 1) {
+                L = M;
+            } else {
+                R = M;
+            }
+            // cout << L << ' ' << M << ' ' << R << endl;
+        }
+    }
+    cout << R + min(x, y);
+}
+
+
+
+G	Провода
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    long long n, k, L, R, M, s;
+    vector<long long> l;
+    cin >> n >> k;
+    for (int i = 0; i < n; i++) {
+        cin >> L;
+        l.push_back(L);
+    }
+    L = 0;
+    R = 100000000;
+    s = 0;
+    for (int i = 0; i < n; i++) {
+        s += l[i];
+    }
+    if (s < k) {
+        cout << 0;
+    } else {
+        while (L + 1 < R) {
+            M = (L + R) / 2;
+            s = 0;
+            for (int i = 0; i < n; i++) {
+                s += l[i] / M;
+            }
+            if (s >= k) {
+                L = M;
+            } else {
+                R = M;
+            }
+        }
+        cout << L;
+    }
+    return 0;
+}
+
+
+
+H	Коровы - в стойла
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    int n, k, L, M, R, a, b;
+    cin >> n >> k;
+    vector <int> s(n);
+    for (int i = 0; i < n; i++) {
+        cin >> s[i];
+    }
+    L = 0;
+    R = 1000000001;
+    while (L + 1 < R) {
+        M = (L + R) / 2;
+        a = M;
+        b = 1;
+        for (int i = 1; i < n; i++) {
+            if (a - (s[i] - s[i - 1]) < 1) {
+                b += 1;
+                a = M;
+                // cout << s[i] << " ";
+            } else {
+                a -= (s[i] - s[i - 1]);
+            }
+            // cout << "\n" << a << " ";
+        }
+        // cout << "\n" << b << "\n";
+        if (b >= k) {
+            L = M;
+        } else {
+            R = M;
+        }
+    //     cout << L << " " << R << endl;
+    }
+    cout << L;
+    return 0;
+}
+
+
+
+I	Дипломы
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    long long w, h, n, L, M, R;
+    cin >> w >> h >> n;
+    L = 0;
+    R = max(w, h) * n;
+    while (L + 1 < R) {
+        M = (L + R) / 2;
+        if ((M / w) * (M / h) < n) {
+            L = M;
+        } else {
+            R = M;
+        }
+        // cout << L << M << R << endl;
+    }
+    cout << R;
+    return 0;
+}
+
+
+
