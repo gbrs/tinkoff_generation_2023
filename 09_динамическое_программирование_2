@@ -1,0 +1,256 @@
+Задача A: 0-1 рюкзак: точный вес
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int n, w, a, su;
+    std::cin >> n >> w;
+    std::vector<int> m(n + 1);
+    su = 0;
+    for (int i = 1; i <= n; i++) {
+        std::cin >> a;
+        m[i] = a;
+        su += a;
+    }
+    if (su >= w) {
+        std::vector<std::vector<bool>> v(n + 1, std::vector<bool>(su + 1, false));
+        v[0][0] = true;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j <= su; j++) {
+                if (j >= m[i]) {
+                    v[i][j] = (v[i - 1][j] || v[i - 1][j - m[i]]);
+                } else {
+                    v[i][j] = v[i - 1][j];
+                }
+            }
+        }
+        a = 1;
+        for (int i = 1; i <= n; i++) {
+            if (v[i][w]) {
+                std::cout << "yes";
+                a = 0;
+                break;
+            }
+        }
+        if (a == 1) {
+            std::cout << "no";
+        }
+    } else {
+        std::cout << "no";
+    }
+}
+
+
+
+Задача B: 0-1 рюкзак: наибольший вес
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int n, w, a, su;
+    std::cin >> n >> w;
+    std::vector<int> m(n + 1);
+    su = 0;
+    for (int i = 1; i <= n; i++) {
+        std::cin >> a;
+        m[i] = a;
+        su += a;
+    }
+    std::vector<std::vector<bool>> v(n + 1, std::vector<bool>(std::max(su, w) + 1, false));
+    v[0][0] = true;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j <= su; j++) {
+            if (j >= m[i]) {
+                v[i][j] = (v[i - 1][j] || v[i - 1][j - m[i]]);
+            } else {
+                v[i][j] = v[i - 1][j];
+            }
+        }
+    }
+    a = 1;
+    for (int i = w; i >= 0; i--) {
+        if (v[n][i]) {
+            std::cout << i;
+            a = 0;
+            break;
+        }
+    }
+    if (a == 1) {
+        std::cout << 0;
+    }
+}
+
+
+
+Задача C: НОПроблемо
+
+Исходный код
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int N, M;
+    cin >> N;
+    vector <int> vn(N);
+    for (int i = 0; i < N; i++) {
+        cin >> vn[i];
+    }
+    cin >> M;
+    vector <int> vm(M);
+    for (int i = 0; i < M; i++) {
+        cin >> vm[i];
+    }
+    vector <vector <int>> dp(N + 1, vector <int> (M + 1));
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= M; j++) {
+            dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            if (vn[i - 1] == vm[j - 1]) {
+                dp[i][j] = max(dp[i][j], dp[i - 1][j - 1] + 1);
+            }
+        }
+    }
+    cout << dp[N][M];
+}
+
+
+
+Задача F: Рюкзак максимальной стоимости
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int n, w, a;
+    std::cin >> n >> w;
+    std::vector<int> m(n), x(n);
+    for (int i = 0; i < n; i++) {
+        std::cin >> m[i];
+    }
+    for (int i = 0; i < n; i++) {
+        std::cin >> x[i];
+    }
+    std::vector<std::vector<int>> v(w + 1, std::vector<int> (n + 1));
+    for (int i = 0; i < n; i++) {
+        /*
+        for (int k = 0; k <= w; k++) {
+            for (int p = 0; p <= n; p++) {
+                std::cout << v[k][p] << " ";
+            }
+            std::cout << '\n';
+        }
+        std::cout << '\n';
+        */
+        for (int j = w; j >= 0; j--) {
+            if (j >= m[i] && v[j][n] < v[j - m[i]][n] + x[i]) {
+                v[j] = v[j - m[i]];
+                v[j][n] += x[i];
+                v[j][i] = 1;
+            }
+        }
+    }
+    /*
+    for (int i = 0; i <= w; i++) {
+        for (int j = 0; j <= n; j++) {
+            std::cout << v[i][j] << " ";
+        }
+        std::cout << '\n';
+    }
+    */
+    a = 0;
+    for (int j = 0; j < n; j++) {
+        a += v[w][j];
+    }
+    std::cout << a << '\n';
+    for (int j = n - 1; j >= 0; j--) {
+        if (v[w][j] == 1) {
+            std::cout << j + 1 << " ";
+        }
+    }
+}
+
+
+
+Задача H: НВП без восстановления ответа
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int N, pos;
+    cin >> N;
+    vector <int> vn(N);
+    for (int i = 0; i < N; i++) {
+        cin >> vn[i];
+    }
+    vector<int> dp(N + 1, 10001);
+    dp[0] = -10001;
+    for (auto x : vn) {
+        pos = lower_bound(dp.begin(), dp.end(), x) - dp.begin();
+        dp[pos] = x;
+    }
+    pos = lower_bound(dp.begin(), dp.end(), 10001) - dp.begin();
+    cout << pos - 1;
+}
+
+
+
+Задача K: НВП с восстановлением
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int N, pos;
+    cin >> N;
+    vector <int> vn(N);
+    vector <int> p(N, -1);
+    for (int i = 0; i < N; i++) {
+        cin >> vn[i];
+    }
+    vector<int> dp(N + 1, 10001);
+    vector<int> dpi(N + 1, -1);
+    dp[0] = -10001;
+
+    for (int i = 0; i < N; i++) {
+        pos = lower_bound(dp.begin(), dp.end(), vn[i]) - dp.begin();
+        dp[pos] = vn[i];
+        dpi[pos] = i;
+        p[i] = dpi[pos - 1];
+    }
+
+    pos = lower_bound(dp.begin(), dp.end(), 10001) - dp.begin();
+    cout << pos - 1;
+    cout << "\n";
+    vector<int> a;
+    pos = dpi[pos - 1];
+    a.push_back(vn[pos]);
+    while (true) {
+        if (p[pos] != -1) {
+            a.push_back(vn[p[pos]]);
+            pos = p[pos];
+        } else {
+            break;
+        }
+    }
+
+    for (int i = a.size() - 1; i >= 0; i--) {
+        cout << a[i] << ' ';
+    }
+}
+
+
+

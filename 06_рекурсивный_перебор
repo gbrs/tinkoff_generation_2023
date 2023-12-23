@@ -1,0 +1,218 @@
+Задача A: Двоичные строки заданной длины
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void f(string pref, int rest) {
+    if (rest == 0) {
+        cout << pref << '\n';
+        return;
+    }
+    f(pref + "0", rest - 1);
+    f(pref + "1", rest - 1);
+}
+
+int main() {
+    int n;
+    string s;
+    cin >> n;
+    f(s, n);
+    return 0;
+}
+
+
+
+Задача B: Все строки длины n из k различных символов
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void f(string pref, int rest, int k) {
+    if (rest == 0) {
+        cout << pref << '\n';
+        return;
+    }
+    for (int i = 0; i < k; i++) {
+        f(pref + to_string(i), rest - 1, k);
+    }
+}
+
+int main() {
+    int n, k;
+    string s;
+    cin >> n >> k;
+    f(s, n, k);
+    return 0;
+}
+
+
+
+Задача C: Все двоичные строки длины n, содержащие ровно k единиц
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+void f(string pref, int rest, int cnt, int k) {
+    if (rest == 0) {
+        cout << pref << '\n';
+        return;
+    }
+    if (rest + cnt > k) {
+        f(pref + "0", rest - 1, cnt, k);
+    }
+    if (cnt < k) {
+        f(pref + "1", rest - 1, cnt + 1, k);
+    }
+}
+
+int main() {
+    int n, k;
+    string s;
+    cin >> n >> k;
+    f(s, n, 0, k);
+    return 0;
+}
+
+
+
+Задача D: Все перестановки заданной длины
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+void f(vector<int>& pref, vector<int>& u, int rest, int n) {
+    if (rest == 0) {
+        for (auto i : pref) {
+            cout << i;
+        }
+        cout << '\n';
+        return;
+    }
+    for (int i = 1; i <= n; i++) {
+        if (u[i]) continue;
+        pref.push_back(i);
+        u[i] = 1;
+        f(pref, u, rest - 1, n);
+        pref.pop_back();
+        u[i] = 0;
+    }
+}
+
+int main() {
+    int n;
+    vector<int> x;
+    vector<int> u(n);
+    cin >> n;
+    f(x, u, n, n);
+    return 0;
+}
+
+
+
+Задача E: Все убывающие последовательности длины k из чисел 1...n
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+void f(vector<int>& pref, int maxx, int left) {
+    if (left == 0) {
+        for (auto i : pref) {
+            cout << i << ' ';
+        }
+        cout << '\n';
+        return;
+    }
+    if (maxx < left) {
+        return;
+    }
+    for (int i = 1; i <= maxx; i++) {
+        pref.push_back(i);
+        f(pref, i - 1, left - 1);
+        pref.pop_back();
+    }
+}
+
+int main() {
+    int n, k;
+    vector<int> x;
+    cin >> n >> k;
+    f(x, n, k);
+    return 0;
+}
+
+
+
+Задача F: Разбиения на слагаемые
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+void f(vector<int>& pref, int summ, int maxx) {
+    if (summ == 0) {
+        for (auto i : pref) {
+            cout << i << ' ';
+        }
+        cout << '\n';
+        return;
+    }
+    for (int i = 1; i <= min(summ, maxx); i++) {
+        pref.push_back(i);
+        f(pref, summ - i, min(maxx, i));
+        pref.pop_back();
+    }
+}
+
+int main() {
+    int n;
+    vector<int> x;
+    cin >> n;
+    f(x, n, n);
+    return 0;
+}
+
+
+
+Задача G: Разбиение на неубывающие слагаемые, обратный порядок
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+void f(vector<int>& pref, int summ, int minn) {
+    if (summ == 0) {
+        for (auto i : pref) {
+            cout << i << ' ';
+        }
+        cout << '\n';
+        return;
+    }
+    pref.push_back(summ);
+    f(pref, 0, summ);
+    pref.pop_back();
+    for (int i = summ / 2; i >= minn; i--) {
+        pref.push_back(i);
+        f(pref, summ - i, i);
+        pref.pop_back();
+    }
+}
+
+int main() {
+    int n;
+    vector<int> x;
+    cin >> n;
+    f(x, n, 1);
+    return 0;
+}
+
+
+

@@ -1,0 +1,225 @@
+Задача A: Проверка на простоту
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int a, b;
+    b = 0;
+    std::cin >> a;
+    for (int i = 2; i * i <= a; i++) {
+        if (a % i == 0) {
+            std::cout << "composite";
+            b = 1;
+            break;
+        }
+    }
+    if (b == 0) {
+        std::cout << "prime";
+    }
+}
+
+
+
+Задача B: Разложение на простые++
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int a, b, c;
+    std::cin >> a;
+    b = a;
+    c = 0;
+    for (int i = 2; i * i <= a; i++) {
+        while (b % i == 0) {
+            c += 1;
+            b /= i;
+        }
+        if (c > 1) {
+            std::cout << i << "^" << c;
+        }
+        if (c == 1) {
+            std::cout << i;
+        }
+        if (b != 1 && c > 0) {
+            std::cout << "*";
+        }
+        c = 0;
+    }
+    if (b != 1) {
+        std::cout << b;
+    }
+}
+
+
+
+Задача C: Количество делителей
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main() {
+    int a, b, c, otv;
+    std::cin >> a;
+    b = a;
+    otv = 1;
+    for (int i = 2; i * i <= a; i++) {
+        c = 1;
+        while (b % i == 0) {
+            c += 1;
+            b /= i;
+        }
+        otv *= c;
+    }
+    if (b != 1) {
+        otv *= 2;
+    }
+    std::cout << otv;
+}
+
+
+
+Задача D: Количество делителей
+
+#include <bits/stdc++.h>
+
+int main() {
+    int a, b, c, d;
+    std::vector<int> otv(1, 1);
+    std::cin >> a;
+    b = a;
+    d = 1;
+    for (int i = 2; i * i <= a; i++) {
+        c = 0;
+        while (b % i == 0) {
+            c += 1;
+            b /= i;
+        }
+        if (c != 0) {
+            for (int j = 0; j < d; j++) {
+                for (int h = i; h <= pow(i, c); h *= i) {
+                    otv.push_back(otv[j] * h);
+                }
+            }
+        d *= c + 1;
+        }
+    }
+    if (b != 1) {
+        for (int j = 0; j < d; j++) {
+            otv.push_back(otv[j] * b);
+        }
+        d *= 2;
+    }
+    sort(otv.begin(), otv.end());
+    std::cout << d << '\n';
+    for (int j = 0; j < d; j++) {
+        std::cout << otv[j] << " ";
+    }
+}
+
+
+
+Задача E: Алгоритм Евклида
+
+#include <bits/stdc++.h>
+
+int NOD(int a, int b) {
+    if (a > 0 && b > 0) {
+        return NOD(b, a % b);
+    }
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+int NOK(int a, int b) {
+    return a / NOD(a, b) * b;
+}
+int main() {
+    int a, b;
+    std::cin >> a >> b;
+    std::cout << NOD(a, b);
+}
+
+
+
+Задача F: Складывай, сокращай
+
+Исходный код
+#include <bits/stdc++.h>
+
+int NOD(int a, int b) {
+    if (a > 0 && b > 0) {
+        return NOD(b, a % b);
+    }
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+int NOK(int a, int b) {
+    return a / NOD(a, b) * b;
+}
+int main() {
+    int a, b, c, d;
+    std::cin >> a >> b >> c >> d;
+    std::cout << (a * d + b * c) / NOD(a * d + b * c, b * d) << " " << b * d / NOD(a * d + b * c, b * d);
+}
+
+
+
+Задача G: Шестеренки
+
+#include <bits/stdc++.h>
+
+int NOD(int a, int b) {
+    if (a > 0 && b > 0) {
+        return NOD(b, a % b);
+    }
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+int NOK(int a, int b) {
+    return a / NOD(a, b) * b;
+}
+int main() {
+    int a, b;
+    std::cin >> a >> b;
+    std::cout << NOK(a, b);
+}
+
+
+
+Задача H: МегаНОД
+
+#include <bits/stdc++.h>
+
+int NOD(int a, int b) {
+    if (a > 0 && b > 0) {
+        return NOD(b, a % b);
+    }
+    if (a > b) {
+        return a;
+    }
+    return b;
+}
+int NOK(int a, int b) {
+    return a / NOD(a, b) * b;
+}
+int main() {
+    int a, b, c;
+    std::cin >> a >> b;
+    for (int i = 0; i < a - 1; i++) {
+        std::cin >> c;
+        b = NOD(b, c);
+    }
+    std::cout << b;
+}
+
+
