@@ -1,0 +1,76 @@
+Задача A: Мистер Флойд
+
+#include <vector>
+#include <iostream>
+#include <map>
+#include <set>
+
+int main() {
+    int n, a;
+    int infinite = 1e9;
+    std::cin >> n;
+    std::vector<std::vector<int>> dist(n, std::vector<int>(n));
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            std::cin >> a;
+            if (a == -1) {
+                a = infinite;
+            }
+            dist[i][j] = a;
+        }
+    }
+    for (int nom = 0; nom < n; nom++) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (dist[i][nom] != infinite
+                    && dist[nom][j] != infinite
+                    && dist[i][j] > dist[i][nom] + dist[nom][j]) {
+                        dist[i][j] = dist[i][nom] + dist[nom][j];
+                }
+            }
+        }
+    }
+    a = -1;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (a < dist[i][j] && dist[i][j] != infinite) {
+                a = dist[i][j];
+            }
+        }
+    }
+    std::cout << a;
+}
+
+
+
+Задача C: Форд-Беллман
+
+#include<bits/stdc++.h>
+
+int main() {
+    const int INFF = 30000;
+    int n, m, a, b, c;
+    std::cin >> n >> m;
+    std::vector<std::vector<int>> v(m, std::vector<int> (3));  // вектор ребер и их весов
+    std::vector<int> dist(n, INFF);  // вектор расстояний
+    dist[0] = 0;
+    for (int i = 0; i < m; i++) {
+        std::cin >> a >> b >> c;
+        v[i][0] = a - 1;
+        v[i][1] = b - 1;
+        v[i][2] = c;
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (
+                (dist[v[j][0]] != INFF)
+                && (dist[v[j][1]] > dist[v[j][0]] + v[j][2])
+            ) {
+                dist[v[j][1]] = dist[v[j][0]] + v[j][2];
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        std::cout << dist[i] << " ";
+    }
+}

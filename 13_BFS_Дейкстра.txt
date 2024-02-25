@@ -1,0 +1,97 @@
+Задача B: BFS на очереди
+
+#include <iostream>
+#include <vector>
+#include <queue>
+
+int main() {
+    int n, m, na, a, b;
+    std::cin >> n >> m >> na;
+    std::vector<std::vector<int>> v(m, std::vector<int>(2));
+    std::vector<std::vector<int>> v1(n);
+    std::vector<int> u(n, -1);
+    std::queue<int> q;
+    for (int i = 0; i < m; i++) {
+        std::cin >> a >> b;
+        v[i][0] = a - 1;
+        v[i][1] = b - 1;
+    }
+    for (int i = 0; i < m; i++) {
+        v1[v[i][0]].push_back(v[i][1]);
+        v1[v[i][1]].push_back(v[i][0]);
+    }
+    na -= 1;
+    q.push(na);
+    u[na] = 0;
+    while (q.size() > 0) {
+        a = q.front();
+        q.pop();
+        for (int i = 0; i < v1[a].size(); i++) {
+            if (u[v1[a][i]] == -1) {
+                q.push(v1[a][i]);
+                u[v1[a][i]] = u[a] + 1;
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        std::cout << u[i] << " ";
+    }
+}
+
+
+
+Задача E: Дейкстра с восстановлением пути
+
+#include <vector>
+#include <iostream>
+#include <map>
+#include <set>
+
+int main() {
+    int n, m, na, a, b, c, con;
+    long long infinite = 1e17;
+    std::cin >> n >> m >> na >> con;
+    std::vector<std::vector<int>> v(m, std::vector<int>(3));
+    std::vector<std::vector<std::pair<int, int>>> v1(n);
+    std::vector<long long> rod(n, -1), x, dist(n, infinite);
+    std::set<std::pair<int, int>> q;
+    for (int i = 0; i < m; i++) {
+        std::cin >> a >> b >> c;
+        v[i][0] = a - 1;
+        v[i][1] = b - 1;
+        v[i][2] = c;
+    }
+    for (int i = 0; i < m; i++) {
+        v1[v[i][0]].push_back({v[i][1], v[i][2]});
+        v1[v[i][1]].push_back({v[i][0], v[i][2]});
+    }
+    na -= 1;
+    con -= 1;
+    dist[na] = 0;
+    q.insert({dist[na], na});
+    while (!q.empty()) {
+        a = q.begin()->second;
+        q.erase(q.begin());
+        for (int i = 0; i < v1[a].size(); i++) {
+            if (dist[v1[a][i].first] > dist[a] + v1[a][i].second) {
+                q.erase({dist[v1[a][i].first], v1[a][i].first});
+                dist[v1[a][i].first] = dist[a] + v1[a][i].second;
+                q.insert({dist[v1[a][i].first], v1[a][i].first});
+                rod[v1[a][i].first] = a;
+            }
+        }
+    }
+    if (dist[con] != infinite) {
+        std::cout << dist[con] << " ";
+        while (con != -1) {
+            x.push_back(con);
+            con = rod[con];
+        }
+        std::cout << x.size() << '\n';
+        for (int i = x.size() - 1; i >= 0; i--) {
+            std::cout << x[i] + 1 << " ";
+        }
+    } else {
+        std::cout << -1;
+    }
+}
