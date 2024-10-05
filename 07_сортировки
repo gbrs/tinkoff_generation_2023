@@ -505,6 +505,100 @@ int main() {
     std::cout << sum;
 }
 
+Задача M. Египетские пирамиды
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct Point {
+    long long x, y;
+};
+
+struct Event {
+    long long x;
+    int polygon_index;
+
+    bool operator<(const Event& other) const {
+        return x < other.x;
+    }
+};
+
+int winding_number(const vector<Point>& polygon, long long x, long long y) {
+    int wn = 0;
+    int n = polygon.size();
+    for (int i = 0; i < n; ++i) {
+        const Point& p1 = polygon[i];
+        const Point& p2 = polygon[(i + 1) % n];
+
+        if (p1.y <= y) {
+            if (p2.y > y && (p2.x - p1.x) * (y - p1.y) - (p2.y - p1.y) * (x - p1.x) > 0) {
+                ++wn;
+            }
+        } else {
+            if (p2.y <= y && (p2.x - p1.x) * (y - p1.y) - (p2.y - p1.y) * (x - p1.x) < 0) {
+                --wn;
+            }
+        }
+    }
+    return wn;
+}
+
+bool is_inside(const vector<Point>& outer, const vector<Point>& inner) {
+    const Point& p = inner[0];
+    return winding_number(outer, p.x, p.y) != 0;
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int n;
+    cin >> n;
+
+    vector<vector<Point>> polygons(n);
+    vector<Event> events(n);
+
+    for (int i = 0; i < n; ++i) {
+        int c;
+        cin >> c;
+        polygons[i].resize(c);
+        long long min_x = 2000000001LL;
+        for (int j = 0; j < c; ++j) {
+            cin >> polygons[i][j].x >> polygons[i][j].y;
+            min_x = min(min_x, polygons[i][j].x);
+        }
+        events[i] = {min_x, i};
+    }
+
+    sort(events.begin(), events.end());
+
+    vector<int> counts(n, 0);
+    vector<int> active_polygons;
+
+    for (const auto& event : events) {
+        int i = event.polygon_index;
+
+        for (int j : active_polygons) {
+            if (i != j) {
+                if (is_inside(polygons[j], polygons[i])) {
+                    counts[i]++;
+                }
+            }
+        }
+
+        active_polygons.push_back(i);
+    }
+
+    for (int i = 0; i < n; ++i) {
+        cout << counts[i] << " ";
+    }
+    cout << endl;
+
+    return 0;
+}
+
 
 
 Задача O: Quick sort
